@@ -1,13 +1,21 @@
 from winsdk.windows.media.control import GlobalSystemMediaTransportControlsSessionManager as MediaManager
-import asyncio, json, time, pathlib
-temp= pathlib.Path(r"Z:\PROJECT ZHOPA\goosecool1-s_ST-MHP-PD\ProtoOnYourScreen!\src\environment\winsdk_audio_temp.json")
-
+from winsdk.windows.storage.streams import DataReader, Buffer
+import asyncio, json, time, pathlib, PIL
+base= pathlib.Path(r"Z:\PROJECT ZHOPA\goosecool1-s_ST-MHP-PD\ProtoOnYourScreen!\src\environment")
+tempJson= base / "winsdk_audio_temp.json"
+tempJpeg= base / "images" / "unnamed.jpg"
+tempNoIm= base / "images" / "NoImage.jpg"
+async def loadThumbnail(url):
+    try:
+        ...
+    except Exception as e: print(f"Oh...I have some problem... O-O||")
 async def getMediaInfo():
     try:
         if not (manager:= await MediaManager.request_async()):             return None
         if not (session:= manager.get_current_session()):                  return {"status": "no_session"}
         if not (props  := await session.try_get_media_properties_async()): return {"status": "no_properties"}
         pbi= session.get_playback_info();       status = pbi.playback_status if pbi is not None else "unknown"
+        await loadThumbnail(props.thumbnail)
         media_data = {
             "status": "playing" if status == 4 else "paused",
             "title": props.title or "Unknown",
@@ -23,7 +31,7 @@ async def updateJson():
     while True:
         try:
             if (info:= await getMediaInfo()) !=lastData:
-                with open(temp, 'w', encoding='utf-8') as f: json.dump(info, f, ensure_ascii=False, indent=2); lastData = info
+                with open(tempJson, 'w', encoding='utf-8') as f: json.dump(info, f, ensure_ascii=False, indent=2); lastData = info
             await asyncio.sleep(1)
         except Exception as e: await asyncio.sleep(5)
 if __name__ == "__main__": asyncio.run(updateJson())
