@@ -13,11 +13,16 @@
 == WINDOWS MinGW thing ==
 #include <winsock2.h>
 #include <ws2tcpip.h>
-*/
 
-// I like WSL~~... UwU
+== LINUX   WSL   thing ==
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+*/
+
+// I like WSL~~... UwU
+// But...I will use MinGW...Because I'am peace of shit.
+#include <winsock2.h>
+#include <ws2tcpip.h>
 
 #include "getMIME.hpp"
